@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Nat y Salo ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .contenedor {
+            background: linear-gradient(-45deg, #FF9A8B, #FF6B95, #84A9FF, #93FFD8);
+            background-size: 400% 400%;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .carta {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 90%;
+            width: 600px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nombres {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #FF6B95, #84A9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: latido 1.5s ease-in-out infinite;
+        }
+
+        .mensaje-principal {
+            font-size: 1.5rem;
+            color: #444;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+        }
+
+        .pregunta {
+            font-size: 2rem;
+            color: #333;
+            margin: 2rem 0;
+            font-weight: bold;
+        }
+
+        .botones {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        button {
+            font-size: 1.3rem;
+            padding: 0.75em 1.5em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #yesBtn {
+            background: linear-gradient(45deg, #FF6B95, #84A9FF);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 149, 0.4);
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 107, 149, 0.6);
+        }
+
+        #noBtn {
+            background: linear-gradient(45deg, #84A9FF, #93FFD8);
+            color: white;
+            position: relative;
+        }
+
+        .corazones-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+
+        .mensaje-flotante {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1001;
+            animation: aparecer 0.5s ease-out;
+            max-width: 80%;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .familia-emoji {
+            font-size: 3rem;
+            margin: 1rem 0;
+            animation: flotar 2s ease-in-out infinite;
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="carta">
+            <div class="nombres">Nat y Salo 💝</div>
+            <div class="familia-emoji">👨‍👩‍👧</div>
+            <div class="mensaje-principal">
+                Nat, eres el amor de mi vida ❤️<br>
+                y junto con Salo son mis princesas adoradas.<br>
+                Quiero ser más que un novio...<br>
+                Quiero ser parte de sus vidas para siempre,<br>
+                para cuidarlas, protegerlas y amarlas cada día más.<br>
+                Para llenar sus días de sonrisas y su mundo de felicidad.
+            </div>
+            <p class="pregunta">¿Me permiten ser parte de su hermosa familia? 💖</p>
+            <div class="botones">
+                <button id="yesBtn">¡Sí! 💖</button>
+                <button id="noBtn">No 💔</button>
+            </div>
+        </div>
+    </div>
+    <div class="corazones-container" id="corazones"></div>
+    <div class="mensaje-flotante" id="mensajeFlotante"></div>
+
+    <script>
+        const yesBtn = document.querySelector('#yesBtn');
+        const noBtn = document.querySelector('#noBtn');
+        const corazonesContainer = document.querySelector('#corazones');
+        const mensajeFlotante = document.querySelector('#mensajeFlotante');
+
+        function mostrarMensajeFlotante(mensaje, duracion = 2000) {
+            mensajeFlotante.textContent = mensaje;
+            mensajeFlotante.style.display = 'block';
+            setTimeout(() => {
+                mensajeFlotante.style.display = 'none';
+            }, duracion);
+        }
+
+        function crearCorazones() {
+            corazonesContainer.style.display = 'block';
+            const emojis = ['❤️', '💖', '💝', '💕', '💗', '👨‍👩‍👧', '✨'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const corazon = document.createElement('div');
+                    corazon.classList.add('corazon');
+                    corazon.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                    corazon.style.left = Math.random() * 100 + 'vw';
+                    corazon.style.position = 'absolute';
+                    corazon.style.fontSize = '2rem';
+                    corazon.style.animation = 'floatHeart 2s ease-in-out';
+                    corazonesContainer.appendChild(corazon);
+                    
+                    setTimeout(() => {
+                        corazon.remove();
+                    }, 2000);
+                }, i * 50);
+            }
+        }
+
+        yesBtn.addEventListener('click', function () {
+            crearCorazones();
+            
+            const mensajes = [
+                "Nat, eres el amor de mi vida y mi razón de ser ❤️",
+                "Salo, eres mi princesita hermosa, un regalo del cielo ✨",
+                "Son lo más valioso y hermoso que tengo en la vida 👨‍👩‍👧",
+                "Las amo con toda mi alma y mi corazón 💝",
+                "Prometo hacerlas felices cada día de mi vida 💖",
+                "Son mi mayor bendición y mi más grande amor ✨",
+                "Juntos construiremos un mundo lleno de amor y sonrisas 🌟"
+            ];
+            
+            let contador = 0;
+            const intervaloMensajes = setInterval(() => {
+                if (contador < mensajes.length) {
+                    mostrarMensajeFlotante(mensajes[contador], 1800);
+                    contador++;
+                } else {
+                    clearInterval(intervaloMensajes);
+                    setTimeout(() => {
+                        window.location.href = 'https://www.youtube.com/watch?v=is_iOZeHTfU';
+                    }, 10000);
+                }
+            }, 2000);
+        });
+
+        noBtn.addEventListener('mouseover', function () {
+            const randomX = parseInt(Math.random() * 100);
+            const randomY = parseInt(Math.random() * 100);
+            noBtn.style.setProperty('position', 'absolute');
+            noBtn.style.setProperty('top', randomY + '%');
+            noBtn.style.setProperty('left', randomX + '%');
+            noBtn.style.setProperty('transform', `translate(-${randomX}%,-${randomY}%)`);
+        });
+
+        // Emojis flotantes de familia
+        setInterval(() => {
+            const emoji = document.createElement('div');
+            emoji.innerHTML = Math.random() > 0.5 ? '👨‍👩‍👧' : '❤️';
+            emoji.style.position = 'absolute';
+            emoji.style.left = Math.random() * 100 + '%';
+            emoji.style.top = '100%';
+            emoji.style.fontSize = '2rem';
+            emoji.style.animation = 'float 6s ease-in-out';
+            document.querySelector('.contenedor').appendChild(emoji);
+            
+            setTimeout(() => {
+                emoji.remove();
+            }, 6000);
+        }, 500);
+    </script>
+</body>
+</html>
