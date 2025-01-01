@@ -55,13 +55,6 @@
             animation: latido 1.5s ease-in-out infinite;
         }
 
-        .mensaje-principal {
-            font-size: 1.5rem;
-            color: #444;
-            margin: 1.5rem 0;
-            line-height: 1.6;
-        }
-
         .pregunta {
             font-size: 2rem;
             color: #333;
@@ -104,16 +97,7 @@
             position: relative;
         }
 
-        .corazones-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: none;
-            z-index: 1000;
-        }
-
-        .mensaje-flotante {
+        .letrero {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -124,10 +108,12 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             display: none;
             z-index: 1001;
-            animation: aparecer 0.5s ease-out;
-            max-width: 80%;
+            animation: aparecer 1s ease-out;
+            max-width: 90%;
+            width: 600px;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            color: #333;
         }
 
         @keyframes aparecer {
@@ -141,15 +127,25 @@
             }
         }
 
-        .familia-emoji {
-            font-size: 3rem;
-            margin: 1rem 0;
-            animation: flotar 2s ease-in-out infinite;
+        .corazones {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+
+        .corazon {
+            position: absolute;
+            font-size: 2rem;
+            animation: flotar 2s ease-in-out;
         }
 
         @keyframes flotar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-50vh) scale(1) rotate(180deg); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0) rotate(360deg); opacity: 0; }
         }
 
         @keyframes latido {
@@ -163,41 +159,39 @@
     <div class="contenedor">
         <div class="carta">
             <div class="nombres">Nat y Salo 💝</div>
-            <div class="familia-emoji">👨‍👩‍👧</div>
-            <div class="mensaje-principal">
-                Nat, eres el amor de mi vida ❤️<br>
-                y junto con Salo son mis princesas adoradas.<br>
-                Quiero ser más que un novio...<br>
-                Quiero ser parte de sus vidas para siempre,<br>
-                para cuidarlas, protegerlas y amarlas cada día más.<br>
-                Para llenar sus días de sonrisas y su mundo de felicidad.
-            </div>
-            <p class="pregunta">¿Me permiten ser parte de su hermosa familia? 💖</p>
+            <p class="pregunta">¿Quieres ser mi novia y parte de mi vida? 💖</p>
             <div class="botones">
                 <button id="yesBtn">¡Sí! 💖</button>
                 <button id="noBtn">No 💔</button>
             </div>
         </div>
     </div>
-    <div class="corazones-container" id="corazones"></div>
-    <div class="mensaje-flotante" id="mensajeFlotante"></div>
+    <div id="letrero" class="letrero"></div>
+    <div class="corazones" id="corazones"></div>
 
     <script>
         const yesBtn = document.querySelector('#yesBtn');
         const noBtn = document.querySelector('#noBtn');
-        const corazonesContainer = document.querySelector('#corazones');
-        const mensajeFlotante = document.querySelector('#mensajeFlotante');
+        const letrero = document.querySelector('#letrero');
+        const corazones = document.querySelector('#corazones');
 
-        function mostrarMensajeFlotante(mensaje, duracion = 2000) {
-            mensajeFlotante.textContent = mensaje;
-            mensajeFlotante.style.display = 'block';
-            setTimeout(() => {
-                mensajeFlotante.style.display = 'none';
-            }, duracion);
-        }
+        const letreros = [
+            "Nat, eres el amor de mi vida ❤️",
+            "Salo, eres mi princesita hermosa 👨‍👧",
+            "Quiero ser parte de sus vidas para siempre 💑",
+            "Las amo con todo mi corazón 💝",
+            "Quiero hacerlas felices cada día 🌟",
+            "Son lo más valioso que tengo ✨",
+            "Quiero ser el padre que Salo merece 👨‍👧",
+            "Juntos seremos la familia más feliz 👨‍👩‍👧",
+            "Las protegeré y cuidaré siempre 💖",
+            "Son mi más grande bendición ❤️",
+            "Quiero despertar cada día a su lado 💑",
+            "Las amo con toda mi alma 💝"
+        ];
 
         function crearCorazones() {
-            corazonesContainer.style.display = 'block';
+            corazones.style.display = 'block';
             const emojis = ['❤️', '💖', '💝', '💕', '💗', '👨‍👩‍👧', '✨'];
             
             for (let i = 0; i < 50; i++) {
@@ -206,10 +200,7 @@
                     corazon.classList.add('corazon');
                     corazon.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
                     corazon.style.left = Math.random() * 100 + 'vw';
-                    corazon.style.position = 'absolute';
-                    corazon.style.fontSize = '2rem';
-                    corazon.style.animation = 'floatHeart 2s ease-in-out';
-                    corazonesContainer.appendChild(corazon);
+                    corazones.appendChild(corazon);
                     
                     setTimeout(() => {
                         corazon.remove();
@@ -218,31 +209,29 @@
             }
         }
 
-        yesBtn.addEventListener('click', function () {
-            crearCorazones();
-            
-            const mensajes = [
-                "Nat, eres el amor de mi vida y mi razón de ser ❤️",
-                "Salo, eres mi princesita hermosa, un regalo del cielo ✨",
-                "Son lo más valioso y hermoso que tengo en la vida 👨‍👩‍👧",
-                "Las amo con toda mi alma y mi corazón 💝",
-                "Prometo hacerlas felices cada día de mi vida 💖",
-                "Son mi mayor bendición y mi más grande amor ✨",
-                "Juntos construiremos un mundo lleno de amor y sonrisas 🌟"
-            ];
-            
-            let contador = 0;
-            const intervaloMensajes = setInterval(() => {
-                if (contador < mensajes.length) {
-                    mostrarMensajeFlotante(mensajes[contador], 1800);
-                    contador++;
-                } else {
-                    clearInterval(intervaloMensajes);
+        function mostrarLetreros(index = 0) {
+            if (index < letreros.length) {
+                letrero.style.display = 'block';
+                letrero.textContent = letreros[index];
+                crearCorazones();
+                
+                setTimeout(() => {
+                    letrero.style.display = 'none';
                     setTimeout(() => {
-                        window.location.href = 'https://www.youtube.com/watch?v=is_iOZeHTfU';
-                    }, 10000);
-                }
-            }, 2000);
+                        mostrarLetreros(index + 1);
+                    }, 200);
+                }, 2000);
+            } else {
+                setTimeout(() => {
+                    window.location.href = 'https://www.youtube.com/watch?v=is_iOZeHTfU';
+                }, 1000);
+            }
+        }
+
+        yesBtn.addEventListener('click', function () {
+            document.querySelector('.carta').style.display = 'none';
+            crearCorazones();
+            mostrarLetreros();
         });
 
         noBtn.addEventListener('mouseover', function () {
@@ -253,22 +242,6 @@
             noBtn.style.setProperty('left', randomX + '%');
             noBtn.style.setProperty('transform', `translate(-${randomX}%,-${randomY}%)`);
         });
-
-        // Emojis flotantes de familia
-        setInterval(() => {
-            const emoji = document.createElement('div');
-            emoji.innerHTML = Math.random() > 0.5 ? '👨‍👩‍👧' : '❤️';
-            emoji.style.position = 'absolute';
-            emoji.style.left = Math.random() * 100 + '%';
-            emoji.style.top = '100%';
-            emoji.style.fontSize = '2rem';
-            emoji.style.animation = 'float 6s ease-in-out';
-            document.querySelector('.contenedor').appendChild(emoji);
-            
-            setTimeout(() => {
-                emoji.remove();
-            }, 6000);
-        }, 500);
     </script>
 </body>
 </html>
