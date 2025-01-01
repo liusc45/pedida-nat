@@ -8,7 +8,6 @@
     <link href="https://fonts.bunny.net/css?family=abel:400" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
-        
         * {
             margin: 0;
             padding: 0;
@@ -50,42 +49,24 @@
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: min(85%, 300px);
+            max-width: min(85%, 500px);
             width: 100%;
             backdrop-filter: blur(10px);
             transform: translateY(0);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
-        .carta:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .nombres {
+        .pregunta {
             font-size: clamp(1.8rem, 4vw, 2.2rem);
             font-weight: 600;
             background: linear-gradient(45deg, #ff758c, #ff7eb3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pulseText 2s ease-in-out infinite;
             padding: 0.5rem 0;
-        }
-
-        @keyframes pulseText {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-
-        .pregunta {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: #4a4a4a;
-            font-weight: 400;
             line-height: 1.4;
-            padding: 0.5rem 0;
         }
 
         .botones {
@@ -94,12 +75,6 @@
             justify-content: center;
             flex-direction: row;
             padding: 0.5rem 0;
-        }
-
-        @media (max-width: 480px) {
-            .botones {
-                flex-direction: column;
-            }
         }
 
         button {
@@ -121,34 +96,13 @@
             justify-content: center;
         }
 
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
-            transform: translateY(-100%);
-            transition: 0.3s;
-        }
-
-        button:hover::before {
-            transform: translateY(0);
-        }
-
-        #yesBtn {
+        #yesBtn, #yesBtnSalo {
             background: linear-gradient(45deg, #ff758c, #ff7eb3);
             color: white;
             box-shadow: 0 5px 20px rgba(255, 117, 140, 0.4);
         }
 
-        #yesBtn:hover, #yesBtn:active {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
-        }
-
-        #noBtn {
+        #noBtn, #noBtnSalo {
             background: linear-gradient(45deg, #a8edea, #fed6e3);
             color: #4a4a4a;
         }
@@ -167,9 +121,27 @@
             max-width: min(90%, 600px);
             width: 100%;
             text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .mensaje-contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mensaje-texto {
             font-size: clamp(1.5rem, 4vw, 2.2rem);
             color: #4a4a4a;
-            backdrop-filter: blur(10px);
+        }
+
+        .mensaje-imagen {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
         .corazones {
@@ -206,26 +178,25 @@
                 opacity: 0;
             }
         }
-
-        @media (hover: none) {
-            .carta:hover {
-                transform: none;
-            }
-            
-            button:hover::before {
-                transform: none;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="contenedor">
-        <div class="carta animate__animated animate__fadeIn">
-            <div class="nombres">Nat y Salo 💝</div>
-            <p class="pregunta">¿Quieres ser mi novia y parte de mi vida para siempre? 💖</p>
+        <!-- Primera carta - Pregunta para Nat -->
+        <div id="cartaNat" class="carta animate__animated animate__fadeIn">
+            <div class="pregunta">Nat, ¿quieres ser mi novia y compartir tu vida conmigo para siempre? 💖</div>
             <div class="botones">
                 <button id="yesBtn" class="animate__animated animate__pulse animate__infinite">❤️</button>
                 <button id="noBtn">💔</button>
+            </div>
+        </div>
+
+        <!-- Segunda carta - Pregunta para Salo (inicialmente oculta) -->
+        <div id="cartaSalo" class="carta animate__animated animate__fadeIn" style="display: none;">
+            <div class="pregunta">Salo, ¿me permitirías ser tu papá y cuidarte con todo mi amor? 👨‍👧</div>
+            <div class="botones">
+                <button id="yesBtnSalo" class="animate__animated animate__pulse animate__infinite">❤️</button>
+                <button id="noBtnSalo">💔</button>
             </div>
         </div>
     </div>
@@ -233,29 +204,46 @@
     <div class="corazones" id="corazones"></div>
 
     <script>
+        const mensajes = [
+            {
+                texto: "Son el amor de mi vida ❤️",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.54%20(1).jpeg"
+            },
+            {
+                texto: "Quiero hacerlas felices cada día de mi vida 💝",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.54%20(2).jpeg"
+            },
+            {
+                texto: "Salo es una princesita hermosa 👨‍👧",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.54%20(3).jpeg"
+            },
+            {
+                texto: "Y pronto tendrá un hermanito para jugar 👶",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.54%20(4).jpeg"
+            },
+            {
+                texto: "Para que no esté solita y se diviertan juntos 💕",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.54%20(5).jpeg"
+            },
+            {
+                texto: "Seremos la familia más feliz y unida 👨‍👩‍👧‍👦",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.54%20(6).jpeg"
+            },
+            {
+                texto: "Los amaré y cuidaré con todo mi corazón 💖",
+                imagen: "https://nat-pho.b-cdn.net/WhatsApp%20Image%202024-12-31%20at%2022.10.53.jpeg"
+            }
+        ];
+
+        const cartaNat = document.getElementById('cartaNat');
+        const cartaSalo = document.getElementById('cartaSalo');
         const yesBtn = document.querySelector('#yesBtn');
         const noBtn = document.querySelector('#noBtn');
+        const yesBtnSalo = document.querySelector('#yesBtnSalo');
+        const noBtnSalo = document.querySelector('#noBtnSalo');
         const letrero = document.querySelector('#letrero');
         const corazones = document.querySelector('#corazones');
         let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-        const letreros = [
-            "Nat, eres el amor de mi vida ❤️",
-            "Salo, eres mi princesita hermosa 👨‍👧",
-            "Quiero ser parte de sus vidas para siempre 💑",
-            "Las amo con todo mi corazón 💝",
-            "Quiero hacerlas felices cada día 🌟",
-            "Son lo más valioso que tengo ✨",
-            "Quiero ser el padre que Salo merece 👨‍👧",
-            "Juntos seremos la familia más feliz 👨‍👩‍👧",
-            "Las protegeré y cuidaré siempre 💖",
-            "Son mi más grande bendición ❤️",
-            "Quiero despertar cada día a su lado 💑",
-            "Me gustaría darle un hermanito a Salo 👶",
-            "Para que no esté solita y jueguen juntos 👧👶",
-            "Y formar la familia más hermosa y unida 👨‍👩‍👧‍👦",
-            "Las amo con toda mi alma 💝"
-        ];
 
         function crearCorazones() {
             corazones.style.display = 'block';
@@ -277,25 +265,43 @@
             }
         }
 
-        function mostrarLetreros(index = 0) {
-            if (index < letreros.length) {
+        function mostrarMensajeConFoto(mensaje) {
+            const contenedor = document.createElement('div');
+            contenedor.className = 'mensaje-contenedor animate__animated animate__fadeIn';
+            
+            const texto = document.createElement('div');
+            texto.className = 'mensaje-texto';
+            texto.textContent = mensaje.texto;
+            
+            const imagen = document.createElement('img');
+            imagen.className = 'mensaje-imagen';
+            imagen.src = mensaje.imagen;
+            imagen.alt = 'Foto de amor';
+            
+            contenedor.appendChild(texto);
+            contenedor.appendChild(imagen);
+            
+            letrero.innerHTML = '';
+            letrero.appendChild(contenedor);
+        }
+
+        function mostrarMensajes(index = 0) {
+            if (index < mensajes.length) {
                 letrero.style.display = 'block';
-                letrero.textContent = letreros[index];
-                letrero.classList.add('animate__fadeIn');
+                mostrarMensajeConFoto(mensajes[index]);
                 crearCorazones();
                 
                 setTimeout(() => {
-                    letrero.classList.remove('animate__fadeIn');
                     letrero.classList.add('animate__fadeOut');
                     
                     setTimeout(() => {
                         letrero.style.display = 'none';
                         letrero.classList.remove('animate__fadeOut');
                         setTimeout(() => {
-                            mostrarLetreros(index + 1);
+                            mostrarMensajes(index + 1);
                         }, 200);
                     }, 1000);
-                }, isMobile ? 3000 : 2500);
+                }, isMobile ? 4000 : 3500);
             } else {
                 setTimeout(() => {
                     window.location.href = 'https://www.youtube.com/watch?v=is_iOZeHTfU';
@@ -303,49 +309,56 @@
             }
         }
 
+        // Eventos para la primera carta (Nat)
         yesBtn.addEventListener('click', function() {
-            document.querySelector('.carta').classList.add('animate__fadeOutUp');
+            cartaNat.classList.add('animate__fadeOutUp');
             setTimeout(() => {
-                document.querySelector('.carta').style.display = 'none';
+                cartaNat.style.display = 'none';
+                cartaSalo.style.display = 'block';
                 crearCorazones();
-                mostrarLetreros();
             }, 1000);
         });
 
+        // Eventos para la segunda carta (Salo)
+        yesBtnSalo.addEventListener('click', function() {
+            cartaSalo.classList.add('animate__fadeOutUp');
+            setTimeout(() => {
+                cartaSalo.style.display = 'none';
+                crearCorazones();
+                mostrarMensajes();
+            }, 1000);
+        });
+
+        // Función para mover el botón No
+        function moverBoton(boton) {
+            const randomX = parseInt(Math.random() * 80 + 10);
+            const randomY = parseInt(Math.random() * 80 + 10);
+            
+            boton.style.setProperty('position', 'absolute');
+            boton.style.setProperty('top', randomY + '%');
+            boton.style.setProperty('left', randomX + '%');
+            boton.style.setProperty('transform', `translate(-${randomX}%, -${randomY}%)`);
+        }
+
+        // Eventos para los botones No
         if (!isMobile) {
-            let noBtnMoves = 0;
-            noBtn.addEventListener('mouseover', function() {
-                noBtnMoves++;
-                const randomX = parseInt(Math.random() * 80 + 10);
-                const randomY = parseInt(Math.random() * 80 + 10);
-                
-                noBtn.style.setProperty('position', 'absolute');
-                noBtn.style.setProperty('top', randomY + '%');
-                noBtn.style.setProperty('left', randomX + '%');
-                noBtn.style.setProperty('transform', `translate(-${randomX}%, -${randomY}%)`);
-                
-                
-            });
+            noBtn.addEventListener('mouseover', () => moverBoton(noBtn));
+            noBtnSalo.addEventListener('mouseover', () => moverBoton(noBtnSalo));
         } else {
-            noBtn.addEventListener('touchstart', function(e) {
+            noBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                const randomX = parseInt(Math.random() * 80 + 10);
-                const randomY = parseInt(Math.random() * 80 + 10);
-                
-                noBtn.style.setProperty('position', 'absolute');
-                noBtn.style.setProperty('top', randomY + '%');
-                noBtn.style.setProperty('left', randomX + '%');
-                noBtn.style.setProperty('transform', `translate(-${randomX}%, -${randomY}%)`);
-                
+                moverBoton(noBtn);
+            });
+            noBtnSalo.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moverBoton(noBtnSalo);
             });
         }
 
-        // Prevenir zoom en dispositivos móviles
         document.addEventListener('gesturestart', function(e) {
             e.preventDefault();
         });
 
-        // Mejorar rendimiento en móviles
         window.addEventListener('load', function() {
             if (isMobile) {
                 window.scrollTo(0, 1);
